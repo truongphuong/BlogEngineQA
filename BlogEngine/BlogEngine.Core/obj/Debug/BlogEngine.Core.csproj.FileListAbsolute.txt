@@ -25,6 +25,5 @@ D:\Project\BlogEngine\BlogEngineQA\BlogEngine\BlogEngine.Core\bin\Debug\AjaxMin.
 D:\Project\BlogEngine\BlogEngineQA\BlogEngine\BlogEngine.Core\bin\Debug\BlogML.dll
 D:\Project\BlogEngine\BlogEngineQA\BlogEngine\BlogEngine.Core\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\Project\BlogEngine\BlogEngineQA\BlogEngine\BlogEngine.Core\bin\Debug\NuGet.Core.dll
-D:\Project\BlogEngine\BlogEngineQA\BlogEngine\BlogEngine.Core\obj\Debug\BlogEngine.Core.csprojResolveAssemblyReference.cache
 D:\Project\BlogEngine\BlogEngineQA\BlogEngine\BlogEngine.Core\obj\Debug\BlogEngine.Core.dll
 D:\Project\BlogEngine\BlogEngineQA\BlogEngine\BlogEngine.Core\obj\Debug\BlogEngine.Core.pdb

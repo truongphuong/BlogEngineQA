@@ -10228,6 +10228,13 @@
             </summary>
             <returns>The client's IP address.</returns>
         </member>
+        <member name="M:BlogEngine.Core.Utils.ToPublicUrl(System.String)">
+            <summary>
+            Convert relative Url to public Url
+            </summary>
+            <param name="relativeUri"></param>
+            <returns></returns>
+        </member>
         <member name="M:BlogEngine.Core.Utils.GetCompiledExtensions">
             <summary>
             To support compiled extensions

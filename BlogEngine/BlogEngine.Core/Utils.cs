@@ -77,7 +77,7 @@
         /// </summary>
         private static readonly Regex RegexMobile =
             new Regex(
-                ConfigurationManager.AppSettings.Get("BlogEngine.MobileDevices"), 
+                ConfigurationManager.AppSettings.Get("BlogEngine.MobileDevices"),
                 RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         /// <summary>
@@ -119,7 +119,7 @@
         /// <value>A string that ends with a '/'.</value>
         public static Uri AbsoluteWebRoot
         {
-            get { return Blog.CurrentInstance.AbsoluteWebRoot; }
+            get { return new Uri(ToPublicUrl(Blog.CurrentInstance.AbsoluteWebRoot.ToString())); }
         }
 
         /// <summary>
@@ -197,7 +197,8 @@
         {
             get
             {
-                return Blog.CurrentInstance.RelativeWebRoot;
+                return ToPublicUrl(Blog.CurrentInstance.RelativeWebRoot);
+                
             }
         }
 
@@ -691,7 +692,7 @@
         /// </returns>
         public static string GetSubDomain(Uri url)
         {
-           
+
             if (url.HostNameType == UriHostNameType.Dns)
             {
                 var host = url.Host;
@@ -807,7 +808,7 @@
 
         private static readonly Regex validIpV4AddressRegex = new Regex(@"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", RegexOptions.IgnoreCase);
         private static readonly Regex validHostnameRegex = new Regex(@"^(([a-z]|[a-z][a-z0-9\-]*[a-z0-9])\.)*([a-z]|[a-z][a-z0-9\-]*[a-z0-9])$", RegexOptions.IgnoreCase);
-        
+
 
         /// <summary>
         /// Email address by user name
@@ -821,7 +822,7 @@
             var users = userCollection.Cast<System.Web.Security.MembershipUser>().ToList();
             var user = users.FirstOrDefault(u => u.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
-            if(user != null)
+            if (user != null)
             {
                 return user.Email;
             }
@@ -904,7 +905,7 @@
             foreach (Assembly a in codeAssemblies)
             {
                 var types = a.GetTypes();
-                
+
                 Type extensionsAttribute = typeof(ExtensionAttribute);
 
                 sortedExtensions.AddRange(
@@ -950,13 +951,13 @@
         /// </summary>
         /// <param name="format">A format string</param>
         /// <param name="args">Arguments to replace in the format string</param>
-		public static void Log(string format, params object[] args)
-		{
-			if (OnLog != null)
-			{
-				OnLog(string.Format(format, args), EventArgs.Empty);
-			}
-		}
+        public static void Log(string format, params object[] args)
+        {
+            if (OnLog != null)
+            {
+                OnLog(string.Format(format, args), EventArgs.Empty);
+            }
+        }
 
         /// <summary>
         /// Sends a message to any subscribed log listeners.
@@ -1325,7 +1326,7 @@
 
             if (dir != null && Directory.Exists(dir))
             {
-                if (string.IsNullOrEmpty(file)) 
+                if (string.IsNullOrEmpty(file))
                     file = string.Format("test{0}.txt", DateTime.Now.ToString("ddmmhhssss"));
 
                 try
@@ -1486,6 +1487,33 @@
         #region Methods
 
         /// <summary>
+        /// Convert relative Url to public Url
+        /// </summary>
+        /// <param name="relativeUri"></param>
+        /// <returns></returns>
+        public static string ToPublicUrl(string relativeUri)
+        {
+
+            var httpContext = HttpContext.Current;
+
+            var uriBuilder = new UriBuilder
+            {
+                Host = httpContext.Request.Url.Host,
+                Path = "/",
+                Port = 80,
+                Scheme = "http",
+            };
+
+            if (httpContext.Request.Url.AbsoluteUri.Contains("localhost"))
+            {
+                uriBuilder.Port = httpContext.Request.Url.Port;
+            }
+
+            return uriBuilder.Uri.ToString();
+        }
+
+
+        /// <summary>
         /// To support compiled extensions
         ///     This methed looks for DLLs in the "/bin" folder
         ///     and if assembly compiled with configuration
@@ -1500,11 +1528,11 @@
             foreach (var asm in from fileName in fileEntries
                                 where fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)
                                 select Assembly.LoadFrom(fileName)
-                                into asm
-                                let attr = asm.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false)
-                                where attr.Length > 0
-                                let aca = (AssemblyConfigurationAttribute)attr[0]
-                                select asm)
+                                    into asm
+                                    let attr = asm.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false)
+                                    where attr.Length > 0
+                                    let aca = (AssemblyConfigurationAttribute)attr[0]
+                                    select asm)
             {
                 try
                 {
@@ -1554,7 +1582,8 @@
 
             var readerSettings = new XmlReaderSettings
                 {
-                    MaxCharactersFromEntities = 1024, XmlResolver = new XmlSafeResolver() 
+                    MaxCharactersFromEntities = 1024,
+                    XmlResolver = new XmlSafeResolver()
                 };
 
             XmlDocument doc;
@@ -1570,7 +1599,7 @@
             {
                 return null;
             }
-            
+
             return doc;
         }
 
